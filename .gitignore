@@ -58,3 +58,6 @@ jspm_packages/
 
 # Vercel
 .vercel
+
+# Ignore confidential PRD
+h5_game_mvp_prd_v0.1.md
