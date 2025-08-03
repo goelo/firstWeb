@@ -4,6 +4,7 @@
  */
 import { notFound } from 'next/navigation'
 import { games, type Game } from '@/data/games'
+import GameMonetizeWalkthrough from '@/components/GameMonetizeWalkthrough'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -39,6 +40,21 @@ export default async function GamePage({ params }: PageProps) {
       </div>
       {game.description && (
         <p className="mt-6 text-gray-700">{game.description}</p>
+      )}
+
+      {/* Walkthrough（当有配置时显示） */}
+      {game.hasWalkthrough && game.walkthroughGameId && (
+        <section className="mt-10">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Walkthrough</h2>
+          <GameMonetizeWalkthrough
+            gameid={game.walkthroughGameId}
+            width="100%"
+            height="480px"
+            color={process.env.NEXT_PUBLIC_WALKTHROUGH_DEFAULT_COLOR || '#3f007e'}
+            getAds={(process.env.NEXT_PUBLIC_WALKTHROUGH_SHOW_ADS === 'true') ? 'true' : 'false'}
+            className="border rounded-md overflow-hidden"
+          />
+        </section>
       )}
     </main>
   )
