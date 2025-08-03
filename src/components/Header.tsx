@@ -13,12 +13,12 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center mb-2">
             <div className="text-3xl md:text-4xl font-bold text-primary-600">
-              PlayIO Today
+              Play I/O
             </div>
           </Link>
           {/* Tagline */}
           <p className="text-sm text-slate-600 text-center">
-            Play HTML5 games instantly. No download. Free. Unblocked.
+            Play HTML5 games today. No download. Free. Unblocked.
           </p>
         </div>
       </div>

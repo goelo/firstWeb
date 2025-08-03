@@ -59,5 +59,34 @@ jspm_packages/
 # Vercel
 .vercel
 
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Testing
+.nyc_output
+.coverage
+*.lcov
+
+# Storybook build outputs
+storybook-static
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+*.sublime-project
+*.sublime-workspace
+
+# Local Netlify folder
+.netlify
+
+# Claude AI assistant files
+.claude/
+
 # Ignore confidential PRD
 h5_game_mvp_prd_v0.1.md

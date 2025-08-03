@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="flex flex-col items-center space-y-4">
           {/* Brand */}
           <Link href="/" className="text-xl font-bold text-primary-600">
-            PlayIO Today
+            Play I/O Today
           </Link>
 
           {/* 简短tagline */}
@@ -31,9 +31,9 @@ export default function Footer() {
             <Link href="/terms" className="text-gray-600 hover:text-primary-600">
               Terms of Service
             </Link>
-            <Link href="/contact" className="text-gray-600 hover:text-primary-600">
+            {/* <Link href="/contact" className="text-gray-600 hover:text-primary-600">
               Contact
-            </Link>
+            </Link> */}
           </div>
 
           {/* Copyright */}
