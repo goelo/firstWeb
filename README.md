@@ -1,223 +1,158 @@
 # PlayIO Today - H5游戏聚合站 MVP
 
-一个基于Next.js构建的HTML5游戏聚合平台，专注于提供免费、无需下载的在线游戏体验。
-
-## 🎮 项目概述
-
-PlayIO Today是一个现代化的HTML5游戏聚合网站，旨在为用户提供：
-- 🚀 即时游戏体验，无需下载
-- 📱 完全响应式设计，支持所有设备
-- 🎯 多种游戏分类（动作、益智、策略等）
-- 📝 游戏攻略和评测博客
-- 🔍 SEO优化，便于搜索引擎收录
-
-## 🛠 技术栈
-
-- **框架**: Next.js 15.4.4 (App Router)
-- **样式**: Tailwind CSS
-- **语言**: TypeScript
-- **内容管理**: MDX
-- **部署**: Vercel
-- **分析**: Google Analytics 4
-- **SEO**: 结构化数据 (Schema.org)
-
-## 📁 项目结构
-
-```
-src/
-├── app/                    # Next.js App Router页面
-│   ├── blog/              # 博客相关页面
-│   ├── category/          # 游戏分类页面
-│   ├── game/              # 游戏详情页面
-│   ├── privacy/           # 隐私政策
-│   ├── terms/             # 服务条款
-│   └── layout.tsx         # 根布局
-├── components/            # React组件
-│   ├── AdSlot.tsx         # 广告组件
-│   ├── ArticleCard.tsx    # 文章卡片
-│   ├── GameCard.tsx       # 游戏卡片
-│   ├── Header.tsx         # 页头导航
-│   ├── Footer.tsx         # 页脚
-│   └── StructuredData.tsx # 结构化数据
-├── data/                  # 静态数据
-│   ├── games.ts           # 游戏数据
-│   └── articles.ts        # 文章数据
-├── lib/                   # 工具函数
-│   ├── ads.ts             # 广告管理
-│   └── content.ts         # 内容管理
-└── types/                 # TypeScript类型定义
-```
+一个基于 Next.js + TypeScript 构建的 HTML5 游戏聚合平台，支持以组件化方式快速扩展游戏列表与详情页，并内置 Walkthrough 嵌入与广告位封装。
 
 ## 🚀 快速开始
 
-### 环境要求
-- Node.js 18+
-- npm 或 yarn
+1. 安装依赖
+   ```bash
+   npm install
+   ```
+2. 本地开发
+   ```bash
+   npm run dev
+   ```
+3. 打开浏览器访问 http://localhost:3000
 
-### 安装依赖
-```bash
-npm install
-```
+## 📁 目录结构（与重构后的核心相关）
 
-### 开发模式
+- src/
+  - app/
+    - page.tsx               // 首页：使用 GameList 展示所有游戏
+    - game/[slug]/page.tsx   // 游戏详情：渲染游戏 iframe；按需嵌入 Walkthrough
+    - layout.tsx             // 根布局：统一 Header / Footer
+  - components/
+    - GameCard.tsx           // 单个游戏卡片
+    - GameList.tsx           // 游戏网格列表（复用 GameCard）
+    - WalkthroughEmbed.tsx   // 通用 Walkthrough 嵌入组件（外部 script）
+    - AdSlot.tsx             // 广告插槽（建议从环境变量读取 tag）
+    - Header.tsx / Footer.tsx
+    - StructuredData.tsx
+  - data/
+    - games.ts               // Game 接口与示例数据（slug/title/url/description/hasWalkthrough/walkthroughGameId/thumbnail）
+- public/
+  - games/                   // 静态游戏资源（例如 /games/stack/index.html）
+- .env.local.example         // 示例环境变量（NEXT_PUBLIC_AD_TAG）
+- tsconfig.json              // 已配置别名 "@/..." 映射到 "src/*"
+
+## 🔗 别名导入
+
+已在 ['tsconfig.json](tsconfig.json:1) 配置：
+- baseUrl: "."
+- paths: { "@/*": ["./src/*"] }
+
+内部导入使用 '@/...'，例如：
+- import GameList from '@/components/GameList'
+- import { games } from '@/data/games'
+
+## ⚡️ 如何快速添加新游戏
+
+步骤 1：准备静态文件
+- 将游戏 HTML5 入口（index.html）放到 public/games/your-slug/index.html
+- 可选：添加缩略图 public/games/your-slug/icon.png
+
+步骤 2：在 ['src/data/games.ts](src/data/games.ts:1) 中新增一条 Game
+- Game 接口字段：
+  - slug: string            // URL 标识（唯一），如 'stack'
+  - title: string           // 展示名称
+  - url: string             // 入口路径，如 '/games/stack/index.html'
+  - description?: string    // 可选描述
+  - hasWalkthrough: boolean // 是否存在 Walkthrough（攻略/演示）
+  - walkthroughGameId?: string // Walkthrough 的 gameid（hasWalkthrough=true 时可配置）
+  - thumbnail?: string      // 可选缩略图路径（建议 public/games/slug/icon.png）
+- 示例：
+  ```ts
+  export const games: Game[] = [
+    {
+      id: 'stack',
+      slug: 'stack',
+      title: 'Stack',
+      url: '/games/stack/index.html',
+      description: 'Stack blocks as high as you can in this fast-paced arcade game.',
+      hasWalkthrough: false,
+      thumbnail: '/games/stack/icon.png'
+    },
+    {
+      slug: 'your-slug',
+      title: 'Your Game',
+      url: '/games/your-slug/index.html',
+      description: 'Optional description...',
+      hasWalkthrough: true,
+      walkthroughGameId: 'external-walkthrough-id',
+      thumbnail: '/games/your-slug/icon.png'
+    }
+  ]
+  ```
+
+步骤 3：本地验证
 ```bash
 npm run dev
 ```
+- 首页应展示新游戏卡片（来自 ['src/components/GameList.tsx](src/components/GameList.tsx:1)）
+- 点击卡片跳转 /game/your-slug，详情页 iframe 读取 game.url 并正常加载
+- 如 hasWalkthrough=true 且配置了 walkthroughGameId，可按需在详情页加入 WalkthroughEmbed（见下节）
 
-访问 http://localhost:3000 查看网站
-
-### 构建生产版本
+步骤 4：提交与部署
 ```bash
-npm run build
-npm start
+git add .
+git commit -m "feat: add new game your-slug"
+git push
+```
+- 使用 Vercel 的话会自动触发构建与部署
+
+## 🧩 Walkthrough 嵌入
+
+组件：['src/components/WalkthroughEmbed.tsx](src/components/WalkthroughEmbed.tsx:1)
+- Props:
+  - gameid: string
+  - width?: number | string
+  - height?: number | string
+  - color?: string
+  - showAds?: boolean
+- 组件会在客户端注入外部脚本（目前示例 URL 为占位：https://example.com/walkthrough-sdk.js），请替换为真实地址并按提供的 API 初始化
+
+在 ['src/app/game/[slug]/page.tsx](src/app/game/[slug]/page.tsx:1) 中按需渲染：
+```tsx
+{game.hasWalkthrough && game.walkthroughGameId && (
+  <section className="mt-10">
+    <h2 className="text-2xl font-semibold text-gray-900 mb-4">Walkthrough</h2>
+    <WalkthroughEmbed
+      gameid={game.walkthroughGameId}
+      width="100%"
+      height={360}
+      color="#2563eb"
+      showAds={true}
+      className="border rounded-md overflow-hidden"
+    />
+  </section>
+)}
 ```
 
-## 🎯 核心功能
+## 📺 广告位配置（建议）
 
-### 1. 游戏展示
-- 8款精选HTML5游戏
-- 游戏分类和标签系统
-- 游戏评分和播放次数统计
-- 相关游戏推荐
+组件：['src/components/AdSlot.tsx](src/components/AdSlot.tsx:1)
+- 建议从环境变量读取广告 tag：process.env.NEXT_PUBLIC_AD_TAG
+- 若未配置则显示占位，便于本地开发
 
-### 2. 内容管理
-- MDX支持的博客系统
-- 3篇原创游戏相关文章
-- 文章分类和标签
-- 阅读时间估算
-
-### 3. SEO优化
-- 完整的meta标签配置
-- Schema.org结构化数据
-- 自动生成sitemap.xml
-- robots.txt配置
-
-### 4. 广告系统
-- 预留多个广告位
-- 广告展示统计
-- 支持多种广告格式
-- 广告收益追踪
-
-## 📊 数据结构
-
-### 游戏数据 (games.ts)
-```typescript
-interface Game {
-  id: string
-  title: string
-  slug: string
-  description: string
-  thumbnail: string
-  gameUrl: string
-  category: string
-  rating: number
-  plays: number
-  dateAdded: string
-  tags: string[]
-}
-```
-
-### 文章数据 (articles.ts)
-```typescript
-interface Article {
-  id: string
-  title: string
-  slug: string
-  excerpt: string
-  content: string
-  category: string
-  publishedAt: string
-  readTime: number
-  tags: string[]
-}
-```
-
-## 🎨 设计特色
-
-- **极简设计**: 清爽的界面，专注于内容
-- **卡片式布局**: 现代化的游戏和文章展示
-- **响应式设计**: 完美适配桌面和移动设备
-- **快速加载**: 优化的图片和资源加载
-- **无障碍访问**: 符合WCAG标准
-
-## 📈 SEO策略
-
-1. **技术SEO**
-   - 完整的meta标签
-   - 结构化数据标记
-   - 语义化HTML结构
-   - 快速加载速度
-
-2. **内容SEO**
-   - 原创游戏描述
-   - 高质量博客文章
-   - 关键词优化
-   - 内链建设
-
-3. **用户体验**
-   - 移动端友好
-   - 快速响应
-   - 清晰导航
-   - 无广告干扰游戏区
-
-## 🚀 部署指南
-
-### Vercel部署 (推荐)
-1. 将代码推送到GitHub
-2. 连接Vercel账户
-3. 导入项目并部署
-4. 配置自定义域名
-
-### 环境变量
+环境变量示例：['.env.local.example](.env.local.example:1)
 ```env
-# Google Analytics
-NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
-
-# 广告配置
-NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-XXXXXXXXXX
+NEXT_PUBLIC_AD_TAG=your-ad-tag
 ```
+将其复制为 .env.local 并填写真实值（.env.local 默认不会提交到 Git）
 
-## 📊 性能指标
+## 🔎 SEO 结构化数据（可选）
 
-- **Lighthouse评分**: 90+ (所有指标)
-- **首屏加载时间**: < 2秒
-- **SEO评分**: 100/100
-- **可访问性**: 95+/100
+组件：['src/components/StructuredData.tsx](src/components/StructuredData.tsx:1)
+- 可用于输出 JSON-LD（游戏、面包屑等）
+- 按需调用 generateGameSchema / generateBreadcrumbSchema
 
-## 🔧 开发工具
+## 🤝 贡献与规范
 
-- **ESLint**: 代码质量检查
-- **TypeScript**: 类型安全
-- **Tailwind CSS**: 快速样式开发
-- **Next.js**: 现代React框架
-
-## 📝 待办事项
-
-- [ ] 集成真实游戏平台API
-- [ ] 添加用户评论系统
-- [ ] 实现游戏收藏功能
-- [ ] 多语言支持
-- [ ] 游戏搜索功能
-- [ ] 社交分享优化
-
-## 🤝 贡献指南
-
-1. Fork项目
-2. 创建功能分支
-3. 提交更改
-4. 推送到分支
-5. 创建Pull Request
+- TypeScript 严格模式
+- 导入路径统一使用 '@/...'
+- 优先复用通用组件：GameList、GameCard、WalkthroughEmbed、AdSlot 等
+- PR 请描述清晰变更内容，必要时附截图或录屏
 
 ## 📄 许可证
 
-MIT License - 详见 [LICENSE](LICENSE) 文件
-
-## 📞 联系方式
-
-- 项目地址: https://github.com/your-username/playio-today
-- 演示地址: https://playio-today.vercel.app
-- 邮箱: contact@playiotoday.com
-
----
-
-**PlayIO Today** - 让HTML5游戏触手可及 🎮
+MIT License - 详见 ['LICENSE](LICENSE:1)

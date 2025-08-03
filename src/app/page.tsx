@@ -1,19 +1,10 @@
-export default function Home() {
+import GameList from '@/components/GameList'
+
+export default function HomePage() {
   return (
-    <main className="max-w-md mx-auto my-40 text-center space-y-4">
-      <h1 className="text-4xl font-bold">Play I/O Today 🎮</h1>
-      <p className="text-lg">Hyper-casual HTML5 games – launching soon.</p>
-      <a className="text-blue-600 underline" href="mailto:hi@playiototoday.com">
-        Contact us
-      </a>
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <h1 className="text-3xl font-bold text-gray-900 mb-6">All Games</h1>
+      <GameList />
     </main>
-  );
+  )
 }
-export const games = [
-  {
-    slug: 'stack',
-    title: 'Stack',
-    thumb: '/games/stack/cover.jpg',   // 静态图或外链皆可
-    url: 'https://html5.gamemonetize.co/w6c1riuqxlu05k18ci5mazjcrl74jz6w/',    // 或外部 https://...
-  }
-];
