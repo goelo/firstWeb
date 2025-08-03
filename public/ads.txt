@@ -1,0 +1,13 @@
+# ads.txt file for PlayIO Today
+# This file is required for ad monetization and should be accessible at domain.com/ads.txt
+
+# GameMonetize ads.txt entries
+# Add your GameMonetize publisher ID and other ad network entries here
+# Example format: domain.com, publisher-id, DIRECT, certification-authority-id
+
+# Placeholder - replace with actual ad network information when setting up monetization
+# gamemonetize.com, YOUR_PUBLISHER_ID, DIRECT
+# google.com, pub-XXXXXXXXXXXXXXXX, RESELLER, f08c47fec0942fa0
+
+# Note: This file must be updated with real ad network information before going live
+# Contact your ad networks for the correct entries to include here

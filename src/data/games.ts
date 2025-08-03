@@ -11,11 +11,11 @@ export interface Game {
 
 export const games: Game[] = [
   {
-    id: 'stack',
-    slug: 'stack',
-    title: 'Stack',
+    id: '9mojqu02upm0qrpmlio7ngcgy4nweqtn',
+    slug: 'Puzzle',
+    title: 'Kitty Merge Tycoon',
     url: 'https://html5.gamemonetize.games/9mojqu02upm0qrpmlio7ngcgy4nweqtn/',
-    description: 'Stack blocks as high as you can in this fast-paced arcade game.',
+    description: 'Tap to merge matching kittens and unlock rarer, cuter breeds. Grow your collection into a legendary feline empire — simple to start, impossible to put down.',
     hasWalkthrough: true,
     walkthroughGameId: '9mojqu02upm0qrpmlio7ngcgy4nweqtn',
     thumbnail: '/games/stack/icon.jpg'
